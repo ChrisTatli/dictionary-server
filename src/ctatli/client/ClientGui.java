@@ -3,13 +3,13 @@ package ctatli.client;
 import javax.swing.*;
 import java.awt.*;
 
-public class Gui {
+public class ClientGui {
     JFrame frame = new JFrame("Client");
     Client client;
     JTextArea responseArea;
 
 
-    public Gui(Client client) {
+    public ClientGui(Client client) {
 
         this.client = client;
         this.InitGui();

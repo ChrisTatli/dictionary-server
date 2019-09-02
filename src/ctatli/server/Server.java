@@ -8,21 +8,44 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    private  static int port = 3005;
-    private static int counter = 0;
+
+
+    ServerInformation serverInformation = new ServerInformation();
+
+    private Socket socket;
+    private ServerGui gui;
 
     public static void main(String[] args) {
 	// write your code here
+        Server server = new Server();
+        server.serverInformation.port = 3005;
+        ServerGui gui = new ServerGui(server);
+
+
+        server.InitServer(gui);
+
+
+
+    }
+
+    private void InitServer(ServerGui gui){
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
-        try(ServerSocket server = factory.createServerSocket(port) )
+        Dictionary dictionary = new Dictionary();
+
+
+        try(ServerSocket server = factory.createServerSocket(this.serverInformation.port) )
         {
             System.out.println(("Waiting for client connection-"));
 
             while(true)
             {
                 Socket client = server.accept();
-                counter++;
-                System.out.println("Client"+counter+": Applying for connection!");
+                serverInformation.clientCount++;
+
+                gui.serverLogArea.append("Client"+serverInformation.clientCount+": Applying for connection!\n");
+                gui.serverLogArea.setCaretPosition(gui.serverLogArea.getDocument().getLength());
+
+                System.out.println("Client"+serverInformation.clientCount+": Applying for connection!");
 
                 Thread t = new Thread(() -> serveClient(client));
                 t.start();
@@ -45,7 +68,7 @@ public class Server {
 
             System.out.println("CLIENT: "+input.readUTF());
 
-            output.writeUTF("Server: Hi Client "+counter+" !!!");
+            //output.writeUTF("Server: Hi Client "+counter+" !!!");
         }
         catch (IOException e)
         {
