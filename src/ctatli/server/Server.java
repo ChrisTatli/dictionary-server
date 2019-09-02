@@ -6,6 +6,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Server {
 
@@ -41,11 +44,10 @@ public class Server {
             {
                 Socket client = server.accept();
                 serverInformation.clientCount++;
-
-                gui.serverLogArea.append("Client"+serverInformation.clientCount+": Applying for connection!\n");
+                String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                String logInfo = String.format("[%s] Client %d: Applying for connection!\n", timeStamp, serverInformation.clientCount);
+                gui.serverLogArea.append(logInfo);
                 gui.serverLogArea.setCaretPosition(gui.serverLogArea.getDocument().getLength());
-
-                System.out.println("Client"+serverInformation.clientCount+": Applying for connection!");
 
                 Thread t = new Thread(() -> serveClient(client));
                 t.start();
