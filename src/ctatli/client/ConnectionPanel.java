@@ -26,6 +26,7 @@ public class ConnectionPanel extends JPanel {
                 if(client.connectToServer()){
                     clientGui.frame.getContentPane().removeAll();
                     clientGui.DrawContent();
+                    client.StartClientWorker();
                 }
 
 

@@ -18,7 +18,7 @@ public class ClientGui {
 
     private void InitGui() {
         ConnectionPanel connectionPanel = new ConnectionPanel(client, this);
-        frame.getContentPane().add(connectionPanel, 0);
+        frame.getContentPane().add(connectionPanel);
         frame.setSize(800, 400);
         frame.setVisible(true);
     }

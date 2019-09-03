@@ -1,5 +1,7 @@
 package ctatli.client;
 
+import ctatli.server.Message;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -53,7 +55,8 @@ public class ActionPanel extends JPanel {
         pingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                Message message = new Message(Message.MessageType.PING, "Ping");
+                client.SendMessage(message);
             }
         });
 

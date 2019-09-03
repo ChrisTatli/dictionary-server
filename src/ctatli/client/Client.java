@@ -1,5 +1,9 @@
 package ctatli.client;
 
+import com.google.gson.Gson;
+import ctatli.server.Message;
+import org.w3c.dom.ls.LSException;
+
 import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,6 +16,10 @@ public class Client {
 
     public ConnectionOptions options = new ConnectionOptions();
     private Socket socket;
+    private DataInputStream in;
+    private DataOutputStream out;
+    private ClientGui gui;
+
 
     public Client(){
 
@@ -20,34 +28,59 @@ public class Client {
     public static void main(String[] args)
     {
         Client client = new Client();
-        ClientGui clientGui = new ClientGui(client);
+        client.gui = new ClientGui(client);
     }
 
     public boolean connectToServer(){
         try{
             socket = new Socket(options.ip, options.port);
-            DataInputStream input = new DataInputStream((socket.getInputStream()));
-
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-            String sendData = "I want to connect";
-
-            output.writeUTF(sendData);
-            System.out.println(("Data sent to Server -->" + sendData));
-            output.flush();
-            while(true && input.available() > 0) {
-                String message = input.readUTF();
-                System.out.println(message);
-            }
+            this.in = new DataInputStream((socket.getInputStream()));
+            this.out = new DataOutputStream(socket.getOutputStream());
             return true;
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }return  false;
+        }
+        return  false;
+    }
+
+    public void StartClientWorker(){
+        Thread t = new Thread(() -> ListenToServer());
+        t.start();
+    }
+
+    private void ListenToServer(){
+
+        while(true){
+            this.ReceiveMessage(in);
+
+        }
     }
 
     public void DisconnectFromServer() throws IOException {
         this.socket.close();
+    }
+
+    public void SendMessage(Message message){
+        Gson gson = new Gson();
+        try {
+            out.writeUTF(gson.toJson(message));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Message ReceiveMessage(DataInputStream in){
+        Gson gson = new Gson();
+        try {
+            Message message = gson.fromJson(in.readUTF(), Message.class);
+            this.gui.responseArea.append(message.message);
+            return message;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
