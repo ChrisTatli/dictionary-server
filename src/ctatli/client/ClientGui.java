@@ -35,7 +35,7 @@ public class ClientGui {
 
     public void DrawContent(){
         ResponsePanel responsePanel = new ResponsePanel(this.responseArea);
-        InputPanel inputPanel = new InputPanel(client);
+        InputPanel inputPanel = new InputPanel(client, this.responseArea);
 
         ActionPanel actionPanel = new ActionPanel(inputPanel, client, this);
 

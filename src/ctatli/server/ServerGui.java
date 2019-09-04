@@ -10,7 +10,7 @@ public class ServerGui {
     public ServerGui(Server server){
         this.server = server;
         this.InitGui();
-        this.serverLogArea = new JTextArea(15,60);
+        this.serverLogArea = new JTextArea(15,50);
 
     }
 

@@ -11,7 +11,7 @@ public class InputPanel extends JPanel {
 
     private Client client;
 
-    InputPanel(Client client){
+    InputPanel(Client client, JTextArea responseArea){
         this.client = client;
         JPanel cards = new JPanel();
         CardLayout cardLayout = new CardLayout();
@@ -80,16 +80,29 @@ public class InputPanel extends JPanel {
         queryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Message message = new Message(Message.MessageType.LOOKUP, SanitiseInput(queryWord.getText()));
-                client.SendMessage(message);
+                String input = queryWord.getText();
+                if(IsValidInput(input)){
+                    Message message = new Message(Message.MessageType.LOOKUP, SanitiseInput(queryWord.getText()));
+                    client.SendMessage(message);
+                }
+                else {
+                    responseArea.setText(String.format("%s is not a valid word, your input must only contain letters and hyphens", input));
+                }
             }
         });
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Message message = new Message(Message.MessageType.DELETE, SanitiseInput(deleteWord.getText()));
-                client.SendMessage(message);
+                String input = deleteWord.getText();
+                if(IsValidInput(input)){
+                    Message message = new Message(Message.MessageType.DELETE, SanitiseInput(input));
+                    client.SendMessage(message);
+                }
+                else {
+                    responseArea.setText((String.format("%s is not a valid word, your input must only contain letters and hyphens", input)));
+                }
+
             }
         });
 
@@ -97,5 +110,9 @@ public class InputPanel extends JPanel {
 
     private String SanitiseInput(String input){
         return  input.toLowerCase();
+    }
+
+    private boolean IsValidInput(String input){
+        return input.matches("[A-Z|a-z|\\-]*");
     }
 }
