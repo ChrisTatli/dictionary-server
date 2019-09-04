@@ -113,6 +113,6 @@ public class InputPanel extends JPanel {
     }
 
     private boolean IsValidInput(String input){
-        return input.matches("[A-Z|a-z|\\-]*");
+        return input.matches("[A-Z|a-z|\\-]+");
     }
 }
