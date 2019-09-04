@@ -85,6 +85,14 @@ public class InputPanel extends JPanel {
             }
         });
 
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Message message = new Message(Message.MessageType.DELETE, SanitiseInput(deleteWord.getText()));
+                client.SendMessage(message);
+            }
+        });
+
     }
 
     private String SanitiseInput(String input){

@@ -63,7 +63,7 @@ public class ClientServant extends Thread {
                     //SendMessage(AddToDictionary(message.message));
                     break;
                 case DELETE:
-                    //SendMessage(DeleteFromDictionary(message.message));
+                    SendMessage(DeleteFromDictionary(message.message));
                     break;
                 case DISCONNECT:
                     SendMessage(new Message(Message.MessageType.DISCONNECT, ""));
@@ -81,7 +81,7 @@ public class ClientServant extends Thread {
         Message message;
         if(this.info.dictionary.ContainsWord(word)){
             String successMessage = String.format("%s : %s ", word, this.info.dictionary.QueryWord(word));
-            message = new Message(Message.MessageType.LOOKUP, successMessage);
+            message = new Message(Message.MessageType.SUCCESS, successMessage);
         }
         else{
             String errorMessage = String.format("%s not found in dictionary", word);
@@ -90,9 +90,19 @@ public class ClientServant extends Thread {
         return message;
     }
 
-    private void DeleteFromDictionary(String word){
+    private Message DeleteFromDictionary(String word){
         Message message;
+        if(this.info.dictionary.ContainsWord(word)){
+            this.info.dictionary.DeleteWord(word);
+            String successMessage = String.format("%s deleted from dictionary", word);
+            message = new Message(Message.MessageType.SUCCESS, successMessage );
+        }
+        else{
+            String errorMessage = String.format("%s not found in dictionary");
+            message = new Message(Message.MessageType.ERROR, errorMessage);
 
+        }
+        return message;
     }
 
     private void AddToDictionary(String word){
