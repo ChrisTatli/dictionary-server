@@ -54,8 +54,20 @@ public class ClientServant extends Thread {
             LogMessage(message);
             switch (message.messageType){
                 case PING:
-                    String payload = "Ping!";
-                    SendMessage(new Message(Message.MessageType.PING, payload));
+                    SendMessage(new Message(Message.MessageType.PING, "Pong!"));
+                    break;
+                case LOOKUP:
+                    SendMessage(QueryDictionary(message.message));
+                    break;
+                case ADD:
+                    //SendMessage(AddToDictionary(message.message));
+                    break;
+                case DELETE:
+                    //SendMessage(DeleteFromDictionary(message.message));
+                    break;
+                case DISCONNECT:
+                    SendMessage(new Message(Message.MessageType.DISCONNECT, ""));
+                    break;
 
             }
             return message;
@@ -63,6 +75,28 @@ public class ClientServant extends Thread {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Message QueryDictionary(String word){
+        Message message;
+        if(this.info.dictionary.ContainsWord(word)){
+            String successMessage = String.format("%s : %s ", word, this.info.dictionary.QueryWord(word));
+            message = new Message(Message.MessageType.LOOKUP, successMessage);
+        }
+        else{
+            String errorMessage = String.format("%s not found in dictionary", word);
+            message = new Message(Message.MessageType.ERROR, errorMessage);
+        }
+        return message;
+    }
+
+    private void DeleteFromDictionary(String word){
+        Message message;
+
+    }
+
+    private void AddToDictionary(String word){
+        Message message;
     }
 
     private void LogConnection(){
@@ -79,12 +113,26 @@ public class ClientServant extends Thread {
         gui.serverLogArea.setCaretPosition(gui.serverLogArea.getDocument().getLength());
     }
 
+    private void DropClientConnection(){
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run(){
         this.Connect();
         while(true){
-            this.ReceiveMessage(in);
+            Message message = this.ReceiveMessage(in);
+            if(message.messageType == Message.MessageType.DISCONNECT ){
+                this.DropClientConnection();
+                break;
+            }
         }
     }
+
+
 
 }

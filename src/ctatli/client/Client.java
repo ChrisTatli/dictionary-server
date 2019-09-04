@@ -53,12 +53,20 @@ public class Client {
     private void ListenToServer(){
 
         while(true){
-            this.ReceiveMessage(in);
-
+            Message message = this.ReceiveMessage(in);
+            if(message.messageType == Message.MessageType.DISCONNECT){
+                try {
+                    this.DisconnectFromServer();
+                    break;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    public void DisconnectFromServer() throws IOException {
+    private void DisconnectFromServer() throws IOException {
+        this.gui.responseArea.setText("");
         this.socket.close();
     }
 
@@ -75,7 +83,7 @@ public class Client {
         Gson gson = new Gson();
         try {
             Message message = gson.fromJson(in.readUTF(), Message.class);
-            this.gui.responseArea.append(message.message);
+            this.gui.responseArea.setText(message.message);
             return message;
         } catch (IOException e) {
             e.printStackTrace();

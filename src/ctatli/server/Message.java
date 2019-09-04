@@ -1,7 +1,7 @@
 package ctatli.server;
 
 public class Message {
-    public enum  MessageType {PING, ADD, DELETE, ERROR, LOOKUP, CONNECT, DISCONNECT, HELP};
+    public enum  MessageType {PING, ADD, DELETE, ERROR, LOOKUP, CONNECT, DISCONNECT};
 
     public MessageType messageType;
     public String message;

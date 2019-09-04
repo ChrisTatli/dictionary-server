@@ -22,15 +22,19 @@ public class Dictionary {
         }
     }
 
-    public String queryWord(String word){
+    public boolean ContainsWord(String word){
+        return dictionary.containsKey(word);
+    }
+
+    public String QueryWord(String word){
         return this.dictionary.get(word);
     }
 
-    public void deleteWord(String word){
+    public void DeleteWord(String word){
         this.dictionary.remove(word);
     }
 
-    public void addWord(String word, String definition){
+    public void AddWord(String word, String definition){
         this.dictionary.put(word, definition);
     }
 

@@ -1,11 +1,18 @@
 package ctatli.client;
 
+import ctatli.server.Message;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InputPanel extends JPanel {
 
-    InputPanel(){
+    private Client client;
+
+    InputPanel(Client client){
+        this.client = client;
         JPanel cards = new JPanel();
         CardLayout cardLayout = new CardLayout();
         setLayout(cardLayout);
@@ -69,5 +76,18 @@ public class InputPanel extends JPanel {
         add(deleteWordContainer, "delete");
         add(queryWordContainer, "query");
 
+
+        queryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Message message = new Message(Message.MessageType.LOOKUP, SanitiseInput(queryWord.getText()));
+                client.SendMessage(message);
+            }
+        });
+
+    }
+
+    private String SanitiseInput(String input){
+        return  input.toLowerCase();
     }
 }

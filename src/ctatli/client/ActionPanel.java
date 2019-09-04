@@ -63,12 +63,9 @@ public class ActionPanel extends JPanel {
         disconnectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    client.DisconnectFromServer();
-                    clientGui.Disconnect();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Message message = new Message(Message.MessageType.DISCONNECT, "Disconnecting");
+                client.SendMessage(message);
+                clientGui.Disconnect();
             }
         });
     }
