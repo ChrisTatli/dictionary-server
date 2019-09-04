@@ -1,3 +1,4 @@
+// Created by Christopher Tatli, ctatli@student.unimelb.edu.au 640427 for COMP90015 Project 1
 package ctatli.client;
 
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 
@@ -54,6 +56,7 @@ public class Client {
 
         while(true){
             Message message = this.ReceiveMessage(in);
+            if(message == null) break;
             if(message.messageType == Message.MessageType.DISCONNECT){
                 try {
                     this.DisconnectFromServer();
@@ -83,10 +86,28 @@ public class Client {
         Gson gson = new Gson();
         try {
             Message message = gson.fromJson(in.readUTF(), Message.class);
-            this.gui.responseArea.setText(message.message);
+            if(message.messageType == Message.MessageType.FOUND){
+                int count = 1;
+                this.gui.responseArea.setText(message.multiMessage.getKey() + "\n");
+                for (String definition:
+                     message.multiMessage.getValue()) {
+                    String output = String.format("%d. %s\n", count, definition);
+                    this.gui.responseArea.append(output);
+                    count++;
+                }
+            } else {
+                this.gui.responseArea.setText(message.message);
+            }
+            
             return message;
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(gui.frame, "Connection closed");
+            try {
+                gui.Disconnect();
+                DisconnectFromServer();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }

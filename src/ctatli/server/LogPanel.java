@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 public class LogPanel extends JPanel {
     LogPanel(JTextArea logArea, ServerGui gui){
         JScrollPane pane = new JScrollPane(logArea);
+        logArea.setLineWrap(true);
+        logArea.setEditable(false);
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JButton closeServer = new JButton("Close Server");
         add(pane);
         add(closeServer);

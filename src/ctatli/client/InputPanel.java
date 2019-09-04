@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InputPanel extends JPanel {
 
@@ -111,8 +113,10 @@ public class InputPanel extends JPanel {
             public void actionPerformed(ActionEvent actionEvent) {
                 String wordInput = addWord.getText();
                 String definitionInput = definition.getText();
+                ArrayList<String> definitions = ParseDefinitionInput(definitionInput);
+
                 if(IsValidInput(wordInput)){
-                    Message message = new Message(Message.MessageType.ADD, new Pair<>(SanitiseInput(wordInput), definitionInput));
+                    Message message = new Message(Message.MessageType.ADD, new Pair<>(SanitiseInput(wordInput), definitions));
                     client.SendMessage(message);
                 }
                 else {
@@ -121,6 +125,11 @@ public class InputPanel extends JPanel {
             }
         });
 
+    }
+
+    private ArrayList<String> ParseDefinitionInput(String input){
+        ArrayList<String> defintions = new ArrayList<>(Arrays.asList(input.split("\\n")));
+        return defintions;
     }
 
     private String SanitiseInput(String input){

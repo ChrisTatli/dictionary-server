@@ -1,3 +1,4 @@
+// Created by Christopher Tatli, ctatli@student.unimelb.edu.au 640427 for COMP90015 Project 1
 package ctatli.server;
 
 import com.google.gson.Gson;
@@ -5,11 +6,12 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Dictionary {
 
-    private ConcurrentHashMap<String, String> dictionary = new ConcurrentHashMap<String, String>();
+    private ConcurrentHashMap<String, ArrayList<String>> dictionary = new ConcurrentHashMap<String, ArrayList<String>>();
     private Gson gson = new Gson();
 
     public Dictionary(File file){
@@ -26,7 +28,7 @@ public class Dictionary {
         return dictionary.containsKey(word);
     }
 
-    public String QueryWord(String word){
+    public ArrayList<String> QueryWord(String word){
         return this.dictionary.get(word);
     }
 
@@ -34,7 +36,7 @@ public class Dictionary {
         this.dictionary.remove(word);
     }
 
-    public void AddWord(String word, String definition){
+    public void AddWord(String word, ArrayList<String> definition){
         this.dictionary.put(word, definition);
     }
 

@@ -1,13 +1,16 @@
+// Created by Christopher Tatli, ctatli@student.unimelb.edu.au 640427 for COMP90015 Project 1
 package ctatli.server;
 
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+
 public class Message {
-    public enum  MessageType {PING, ADD, DELETE, ERROR, SUCCESS, LOOKUP, DISCONNECT};
+    public enum  MessageType {PING, ADD, DELETE, ERROR, SUCCESS, LOOKUP, DISCONNECT, FOUND};
 
     public MessageType messageType;
     public String message;
-    public Pair<String, String> addMessage;
+    public Pair<String, ArrayList<String>> multiMessage;
 
 
     public Message(MessageType messageType, String message)
@@ -16,8 +19,8 @@ public class Message {
         this.message = message;
     }
 
-    public Message(MessageType messageType, Pair<String,String> message){
+    public Message(MessageType messageType, Pair<String,ArrayList<String>> message){
         this.messageType = messageType;
-        this.addMessage = message;
+        this.multiMessage = message;
     }
 }

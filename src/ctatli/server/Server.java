@@ -1,3 +1,4 @@
+// Created by Christopher Tatli, ctatli@student.unimelb.edu.au 640427 for COMP90015 Project 1
 package ctatli.server;
 
 import com.google.gson.Gson;
@@ -20,7 +21,7 @@ public class Server {
 
     private ServerSocket serverSocket;
     private ServerGui gui;
-    private boolean isAlive;
+
 
 
     public static void main(String[] args) {
@@ -44,13 +45,13 @@ public class Server {
         serverInformation.dictionary = new Dictionary(this.serverInformation.file);
         try{
             serverSocket = new ServerSocket(serverInformation.port);
-            isAlive = true;
+            serverInformation.isAlive = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        while(isAlive)
+        while(serverInformation.isAlive)
         {
             try{
                 Socket client = serverSocket.accept();
@@ -66,7 +67,12 @@ public class Server {
     public void Shutdown(){
         WriteDictionary(serverInformation.dictionary, serverInformation.file);
         WriteOutputLog(gui.serverLogArea);
-        isAlive = false;
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        serverInformation.isAlive = false;
         try {
             serverSocket.close();
         } catch (IOException e) {

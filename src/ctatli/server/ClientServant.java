@@ -1,13 +1,13 @@
+// Created by Christopher Tatli, ctatli@student.unimelb.edu.au 640427 for COMP90015 Project 1
 package ctatli.server;
 
 import com.google.gson.Gson;
-import ctatli.client.Client;
 import javafx.util.Pair;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -61,7 +61,7 @@ public class ClientServant extends Thread {
                     SendMessage(QueryDictionary(message.message));
                     break;
                 case ADD:
-                    SendMessage(AddToDictionary(message.addMessage));
+                    SendMessage(AddToDictionary(message.multiMessage));
                     break;
                 case DELETE:
                     SendMessage(DeleteFromDictionary(message.message));
@@ -80,8 +80,8 @@ public class ClientServant extends Thread {
     private Message QueryDictionary(String word){
         Message message;
         if(this.info.dictionary.ContainsWord(word)){
-            String successMessage = String.format("%s : %s ", word, this.info.dictionary.QueryWord(word));
-            message = new Message(Message.MessageType.SUCCESS, successMessage);
+            ArrayList<String> successMessage =  this.info.dictionary.QueryWord(word);
+            message = new Message(Message.MessageType.FOUND, new Pair<>(word, successMessage));
         }
         else{
             String errorMessage = String.format("%s not found in dictionary", word);
@@ -105,10 +105,10 @@ public class ClientServant extends Thread {
         return message;
     }
 
-    private Message AddToDictionary(Pair<String,String> input){
+    private Message AddToDictionary(Pair<String, ArrayList<String>> input){
         Message message;
         String word = input.getKey();
-        String definition = input.getValue();
+        ArrayList<String> definition = input.getValue();
         if(this.info.dictionary.ContainsWord(word)){
             String errorMessage = String.format("%s already contained in the dictionary", word);
             message = new Message(Message.MessageType.ERROR, errorMessage);
@@ -130,7 +130,7 @@ public class ClientServant extends Thread {
 
     private void LogMessage(Message message){
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String logInfo = String.format("[%s] Client %d: (%s) %s.\n", timeStamp, clientId, message.messageType.toString(), message.message != null ? message.message : message.addMessage );
+        String logInfo = String.format("[%s] Client %d: (%s) %s.\n", timeStamp, clientId, message.messageType.toString(), message.message != null ? message.message : message.multiMessage);
         gui.serverLogArea.append(logInfo);
         gui.serverLogArea.setCaretPosition(gui.serverLogArea.getDocument().getLength());
     }
@@ -146,13 +146,14 @@ public class ClientServant extends Thread {
     @Override
     public void run(){
         this.Connect();
-        while(true){
+        while(info.isAlive){
             Message message = this.ReceiveMessage(in);
             if(message.messageType == Message.MessageType.DISCONNECT ){
                 this.DropClientConnection();
                 break;
             }
         }
+        this.DropClientConnection();
     }
 
 
