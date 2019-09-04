@@ -12,6 +12,6 @@ public class ServerInformation {
     public boolean isAlive;
 
     public boolean IsPortValid(int port){
-        return (port > 1024) && (port < 4951);
+        return (port > 1024) && (port < 49151);
     }
 }
