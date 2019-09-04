@@ -38,6 +38,10 @@ public class Dictionary {
         this.dictionary.put(word, definition);
     }
 
+    public String SerializeDictionary(){
+        return gson.toJson(dictionary);
+    }
+
 
 
 

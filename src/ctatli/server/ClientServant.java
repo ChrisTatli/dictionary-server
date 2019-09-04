@@ -2,6 +2,7 @@ package ctatli.server;
 
 import com.google.gson.Gson;
 import ctatli.client.Client;
+import javafx.util.Pair;
 
 import javax.xml.crypto.Data;
 import java.io.*;
@@ -60,7 +61,7 @@ public class ClientServant extends Thread {
                     SendMessage(QueryDictionary(message.message));
                     break;
                 case ADD:
-                    //SendMessage(AddToDictionary(message.message));
+                    SendMessage(AddToDictionary(message.addMessage));
                     break;
                 case DELETE:
                     SendMessage(DeleteFromDictionary(message.message));
@@ -68,7 +69,6 @@ public class ClientServant extends Thread {
                 case DISCONNECT:
                     SendMessage(new Message(Message.MessageType.DISCONNECT, ""));
                     break;
-
             }
             return message;
         } catch (IOException e) {
@@ -105,8 +105,20 @@ public class ClientServant extends Thread {
         return message;
     }
 
-    private void AddToDictionary(String word){
+    private Message AddToDictionary(Pair<String,String> input){
         Message message;
+        String word = input.getKey();
+        String definition = input.getValue();
+        if(this.info.dictionary.ContainsWord(word)){
+            String errorMessage = String.format("%s already contained in the dictionary", word);
+            message = new Message(Message.MessageType.ERROR, errorMessage);
+        }
+        else{
+            this.info.dictionary.AddWord(word, definition);
+            String successMessage = String.format("%s added to the dictionary", word);
+            message = new Message(Message.MessageType.SUCCESS, successMessage);
+        }
+        return message;
     }
 
     private void LogConnection(){
@@ -118,7 +130,7 @@ public class ClientServant extends Thread {
 
     private void LogMessage(Message message){
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String logInfo = String.format("[%s] Client %d: (%s) %s.\n", timeStamp, clientId, message.messageType.toString(), message.message);
+        String logInfo = String.format("[%s] Client %d: (%s) %s.\n", timeStamp, clientId, message.messageType.toString(), message.message != null ? message.message : message.addMessage );
         gui.serverLogArea.append(logInfo);
         gui.serverLogArea.setCaretPosition(gui.serverLogArea.getDocument().getLength());
     }

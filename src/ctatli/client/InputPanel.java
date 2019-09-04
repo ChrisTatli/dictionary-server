@@ -1,6 +1,7 @@
 package ctatli.client;
 
 import ctatli.server.Message;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,6 @@ public class InputPanel extends JPanel {
 
     InputPanel(Client client, JTextArea responseArea){
         this.client = client;
-        JPanel cards = new JPanel();
         CardLayout cardLayout = new CardLayout();
         setLayout(cardLayout);
 
@@ -21,9 +21,9 @@ public class InputPanel extends JPanel {
 
         JPanel wordInputContainer = new JPanel();
         JLabel wordInputLabel = new JLabel("Word :");
-        JTextField word = new JTextField(10);
+        JTextField addWord = new JTextField(10);
         wordInputContainer.add(wordInputLabel);
-        wordInputContainer.add(word);
+        wordInputContainer.add(addWord);
 
         JPanel definitionInputContainer = new JPanel();
         JLabel definitionInputLabel = new JLabel("Definition :");
@@ -103,6 +103,21 @@ public class InputPanel extends JPanel {
                     responseArea.setText((String.format("%s is not a valid word, your input must only contain letters and hyphens", input)));
                 }
 
+            }
+        });
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String wordInput = addWord.getText();
+                String definitionInput = definition.getText();
+                if(IsValidInput(wordInput)){
+                    Message message = new Message(Message.MessageType.ADD, new Pair<>(SanitiseInput(wordInput), definitionInput));
+                    client.SendMessage(message);
+                }
+                else {
+                    responseArea.setText((String.format("%s is not a valid word, your input must only contain letters and hyphens", wordInput)));
+                }
             }
         });
 

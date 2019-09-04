@@ -23,9 +23,18 @@ public class ServerGui {
     }
 
     public void DrawContent(){
-        LogPanel logPanel = new LogPanel(this.serverLogArea);
+        LogPanel logPanel = new LogPanel(this.serverLogArea, this);
+
         frame.getContentPane().add(logPanel);
         frame.setVisible(true);
         server.StartServerWorker();
+    }
+
+    public void ShutdownServer(){
+        frame.getContentPane().removeAll();
+        ConnectionPanel connectionPanel = new ConnectionPanel(server.serverInformation, this);
+        frame.getContentPane().add(connectionPanel);
+        server.Shutdown();
+        frame.setVisible(true);
     }
 }
