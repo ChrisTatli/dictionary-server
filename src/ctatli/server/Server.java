@@ -114,6 +114,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+        	logArea.setText("");
             try {
                 out.close();
             } catch (IOException e) {

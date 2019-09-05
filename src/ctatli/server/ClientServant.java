@@ -67,6 +67,7 @@ public class ClientServant extends Thread {
                     SendMessage(DeleteFromDictionary(message.message));
                     break;
                 case DISCONNECT:
+                	this.socket.close();
                     SendMessage(new Message(Message.MessageType.DISCONNECT, ""));
                     break;
             }

@@ -113,7 +113,13 @@ public class InputPanel extends JPanel {
             public void actionPerformed(ActionEvent actionEvent) {
                 String wordInput = addWord.getText();
                 String definitionInput = definition.getText();
+                if(definitionInput.length() == 0) {
+                	responseArea.setText((String.format("Please enter a definition for %s", wordInput)));
+                	return;
+                }
+                
                 ArrayList<String> definitions = ParseDefinitionInput(definitionInput);
+                
 
                 if(IsValidInput(wordInput)){
                     Message message = new Message(Message.MessageType.ADD, new Pair<>(SanitiseInput(wordInput), definitions));
