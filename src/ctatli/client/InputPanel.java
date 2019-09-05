@@ -1,7 +1,7 @@
 package ctatli.client;
 
 import ctatli.server.Message;
-import javafx.util.Pair;
+import org.javatuples.*;
 
 import javax.swing.*;
 import java.awt.*;

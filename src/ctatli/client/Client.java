@@ -88,9 +88,9 @@ public class Client {
             Message message = gson.fromJson(in.readUTF(), Message.class);
             if(message.messageType == Message.MessageType.FOUND){
                 int count = 1;
-                this.gui.responseArea.setText(message.multiMessage.getKey() + "\n");
+                this.gui.responseArea.setText(message.multiMessage.getValue0() + "\n");
                 for (String definition:
-                     message.multiMessage.getValue()) {
+                     message.multiMessage.getValue1()) {
                     String output = String.format("%d. %s\n", count, definition);
                     this.gui.responseArea.append(output);
                     count++;

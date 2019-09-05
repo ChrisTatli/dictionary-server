@@ -2,7 +2,7 @@
 package ctatli.server;
 
 import com.google.gson.Gson;
-import javafx.util.Pair;
+import org.javatuples.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -108,8 +108,8 @@ public class ClientServant extends Thread {
 
     private Message AddToDictionary(Pair<String, ArrayList<String>> input){
         Message message;
-        String word = input.getKey();
-        ArrayList<String> definition = input.getValue();
+        String word = input.getValue0();
+        ArrayList<String> definition = input.getValue1();
         if(this.info.dictionary.ContainsWord(word)){
             String errorMessage = String.format("%s already contained in the dictionary", word);
             message = new Message(Message.MessageType.ERROR, errorMessage);
